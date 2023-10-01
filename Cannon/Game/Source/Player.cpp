@@ -33,13 +33,18 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
+    if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+    {
+        angle += 5;
+    }
+    if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
+    {
+		angle -= 5;
+	}
 
     if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
     {
         initialPosition = position;
-        float angle = 45.0f;
-        float speedX = 0.4f;
-        float speedY = 0.9f;
         float radians = angle * M_PI / 180.0f;
         initialVelocity = { speedX * cosf(radians), -speedY * sinf(radians) };
         gravity = -0.00098f;
@@ -51,27 +56,29 @@ bool Player::Update(float dt)
     float x = initialPosition.x + initialVelocity.x * t;
     float y = initialPosition.y + initialVelocity.y * t - 0.5f * gravity * t * t;
 
-    if (y < initialPosition.y) // La bola está en el aire
+    if (y < initialPosition.y)
     {
         position = { x, y };
+        rotation += 3.0f;
     }
-    else // La bola ha tocado el suelo
+    else
     {
-        if (numBounces < 12) // Definir MAX_BOUNCES según tus necesidades
+        rotation += 0.0f;
+        if (numBounces < 12)
         {
             initialPosition = position;
-            initialVelocity.y = -initialVelocity.y * 0.85f; // Factor de rebote
+            initialVelocity.y = -initialVelocity.y * 0.85f;
             initialVelocity.x = -initialVelocity.x * 0.95f;
             totalTime = 0.0f;
             numBounces++;
         }
     }
 
-    app->render->DrawTexture(texture, position.x, position.y);
+    app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
 
     totalTime += dt;
 
-    printf("\r x: %.2f, y: %.2f", position.x, position.y);
+    printf("\r x: %.2f, y: %.2f, angle: %f", position.x, position.y, angle);
     return true;
 }
 

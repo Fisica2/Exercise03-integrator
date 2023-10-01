@@ -37,6 +37,12 @@ private:
 	float gravity = 0.0f;
 	int numBounces = 0;
 	bool hasJumped = false;
+
+	double rotation;
+
+	float angle = 45.0f;
+	float speedX = 0.4f;
+	float speedY = 0.9f;
 };
 
 #endif // __PLAYER_H__
