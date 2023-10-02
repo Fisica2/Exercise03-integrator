@@ -38,6 +38,7 @@ bool Scene::Start()
 	platform = app->tex->Load("Assets/Textures/wood.png");
 	enemy = app->tex->Load("Assets/Textures/dwarfAlive.png");
 	enemyDead = app->tex->Load("Assets/Textures/dwarfDead.png");
+	cannon = app->tex->Load("Assets/Textures/canon.png");
 	
 	//Music is commented so that you can add your own music
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
@@ -87,6 +88,8 @@ bool Scene::Update(float dt)
 
 	if (!hit)app->render->DrawTexture(enemy, 600, 275);
 	else app->render->DrawTexture(enemyDead, 530, 275);
+
+	app->render->DrawTexture(cannon, 0, 300, NULL, 0.0f, angle, 0,0);
 
 	return true;
 }

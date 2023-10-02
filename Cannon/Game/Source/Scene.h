@@ -33,11 +33,13 @@ public:
 	bool CleanUp();
 
 	bool hit = false;
+	double angle = -45.0f;
 
 private:
 	SDL_Texture* platform;
 	SDL_Texture* enemy;
 	SDL_Texture* enemyDead;
+	SDL_Texture* cannon;
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;

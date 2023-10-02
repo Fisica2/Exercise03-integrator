@@ -38,10 +38,12 @@ bool Player::Update(float dt)
     if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
     {
         angle += 5;
+        scene->angle += 5;
     }
     if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
     {
 		angle -= 5;
+        scene->angle -= 5;
 	}
     if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
     {
