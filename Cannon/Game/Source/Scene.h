@@ -32,9 +32,12 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool hit = false;
+
 private:
 	SDL_Texture* platform;
 	SDL_Texture* enemy;
+	SDL_Texture* enemyDead;
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;

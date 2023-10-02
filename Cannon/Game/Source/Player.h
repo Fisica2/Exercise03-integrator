@@ -23,6 +23,8 @@ public:
 
 	bool CleanUp();
 
+	bool CheckCollision(SDL_Rect enemyRect);
+
 public:
 
 	//L02: TODO 2: Declare player parameters

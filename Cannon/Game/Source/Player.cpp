@@ -33,6 +33,8 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
+    Scene* scene = app->scene;
+
     if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
     {
         angle += 5;
@@ -50,6 +52,12 @@ bool Player::Update(float dt)
     {
         speedX += 0.1f;
         speedY += 0.1f;
+    }
+
+    if (app->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+    {
+        position = fPoint(0, 300);
+        scene->hit = false;
     }
 
     if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -75,7 +83,7 @@ bool Player::Update(float dt)
     else
     {
         rotation += 0.0f;
-        if (numBounces < 12)
+        if (numBounces < 8)
         {
             initialPosition = position;
             initialVelocity.y = -initialVelocity.y * 0.85f;
@@ -85,12 +93,24 @@ bool Player::Update(float dt)
         }
     }
 
+    SDL_Rect enemyRect = { 600, 315, 50, 50 }; // Example enemy position and size
+    if (CheckCollision(enemyRect))
+    {
+        scene->hit = true;
+    }
+
     app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
 
     totalTime += dt;
 
     printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %0.f", speedX, speedY, position.x, position.y, angle);
     return true;
+}
+
+bool Player::CheckCollision(SDL_Rect enemyRect)
+{
+    SDL_Rect playerRect = { (int)position.x, (int)position.y, 30, 30 };
+    return SDL_HasIntersection(&playerRect, &enemyRect);
 }
 
 

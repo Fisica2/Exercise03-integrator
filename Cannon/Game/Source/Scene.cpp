@@ -36,7 +36,8 @@ bool Scene::Start()
 {
 	// NOTE: We have to avoid the use of paths in the code, we will move it later to a config file
 	platform = app->tex->Load("Assets/Textures/wood.png");
-	enemy = app->tex->Load("Assets/Textures/player.png");
+	enemy = app->tex->Load("Assets/Textures/dwarfAlive.png");
+	enemyDead = app->tex->Load("Assets/Textures/dwarfDead.png");
 	
 	//Music is commented so that you can add your own music
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
@@ -84,7 +85,8 @@ bool Scene::Update(float dt)
 	app->render->DrawTexture(platform, 680, 400);
 	app->render->DrawTexture(platform, 980, 400);
 
-	app->render->DrawTexture(enemy, 600, 315);
+	if (!hit)app->render->DrawTexture(enemy, 600, 275);
+	else app->render->DrawTexture(enemyDead, 530, 275);
 
 	return true;
 }
