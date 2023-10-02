@@ -2,7 +2,6 @@
 #define __SCENE_H__
 
 #include "Module.h"
-#include "Player.h"
 
 struct SDL_Texture;
 
@@ -34,13 +33,13 @@ public:
 	bool CleanUp();
 
 private:
-	SDL_Texture* img;
+	SDL_Texture* platform;
+	SDL_Texture* enemy;
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
 
 	//L03: TODO 3b: Declare a Player attribute
-	Player* player;
 
 };
 

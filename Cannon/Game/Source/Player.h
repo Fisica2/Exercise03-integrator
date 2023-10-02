@@ -29,7 +29,7 @@ public:
 	float speed = 0.2f;
 	SDL_Texture* texture = NULL;
 
-private:
+public:
 
 	float totalTime = 0.0f;
 	fPoint initialPosition = { 0, 0 };
@@ -39,9 +39,9 @@ private:
 	bool hasJumped = false;
 
 	double rotation;
-
+	float x, y;
 	float angle = 45.0f;
-	float speedX = 0.4f;
+	float speedX = 0.6f;
 	float speedY = 0.9f;
 };
 

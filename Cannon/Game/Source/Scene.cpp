@@ -5,6 +5,7 @@
 #include "Render.h"
 #include "Window.h"
 #include "Scene.h"
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -34,7 +35,8 @@ bool Scene::Awake()
 bool Scene::Start()
 {
 	// NOTE: We have to avoid the use of paths in the code, we will move it later to a config file
-	/*img = app->tex->Load("Assets/Textures/test.png");*/
+	platform = app->tex->Load("Assets/Textures/wood.png");
+	enemy = app->tex->Load("Assets/Textures/player.png");
 	
 	//Music is commented so that you can add your own music
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
@@ -43,7 +45,7 @@ bool Scene::Start()
 	app->win->GetWindowSize(windowW, windowH);
 
 	//Get the size of the texture
-	app->tex->GetSize(img, texW, texH);
+	/*app->tex->GetSize(img, texW, texH);*/
 
 	textPosX = (float)windowW / 2 - (float)texW / 2;
 	textPosY = (float)windowH / 2 - (float)texH / 2;
@@ -60,6 +62,7 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	Player player;
 	//L02 DONE 3: Make the camera movement independent of framerate
 	float camSpeed = 1; 
 
@@ -76,7 +79,12 @@ bool Scene::Update(float dt)
 		app->render->camera.x += (int)ceil(camSpeed * dt);
 
 	// Renders the image in the center of the screen 
-	/*app->render->DrawTexture(img, (int)textPosX, (int)textPosY);*/
+	app->render->DrawTexture(platform, -120, 330);
+	app->render->DrawTexture(platform, 380, 400);
+	app->render->DrawTexture(platform, 680, 400);
+	app->render->DrawTexture(platform, 980, 400);
+
+	app->render->DrawTexture(enemy, 600, 315);
 
 	return true;
 }

@@ -27,7 +27,6 @@ bool Player::Awake() {
 }
 
 bool Player::Start() {
-
 	texture = app->tex->Load("Assets/Textures/ball.png");
 	return true;
 }
@@ -61,13 +60,14 @@ bool Player::Update(float dt)
         gravity = -0.00098f;
         totalTime = 0.0f;
         numBounces = 0;
+        hasJumped = true;
     }
 
     float t = totalTime + dt;
-    float x = initialPosition.x + initialVelocity.x * t;
-    float y = initialPosition.y + initialVelocity.y * t - 0.5f * gravity * t * t;
+    x = initialPosition.x + initialVelocity.x * t;
+    y = initialPosition.y + initialVelocity.y * t - 0.5f * gravity * t * t;
 
-    if (y < initialPosition.y)
+    if (y < 375 && hasJumped)
     {
         position = { x, y };
         rotation += 3.0f;
