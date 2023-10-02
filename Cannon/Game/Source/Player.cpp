@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Point.h"
+#include "Math.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -41,6 +42,16 @@ bool Player::Update(float dt)
     {
 		angle -= 5;
 	}
+    if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+    {
+        speedX -= 0.1f;
+        speedY -= 0.1f;
+    }
+    if (app->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+    {
+        speedX += 0.1f;
+        speedY += 0.1f;
+    }
 
     if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
     {
@@ -78,7 +89,7 @@ bool Player::Update(float dt)
 
     totalTime += dt;
 
-    printf("\r x: %.2f, y: %.2f, angle: %f", position.x, position.y, angle);
+    printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %0.f", speedX, speedY, position.x, position.y, angle);
     return true;
 }
 
