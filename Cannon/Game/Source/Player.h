@@ -45,6 +45,8 @@ public:
 	float angle = 45.0f;
 	float speedX = 0.6f;
 	float speedY = 0.9f;
+
+	bool visible = false;
 };
 
 #endif // __PLAYER_H__

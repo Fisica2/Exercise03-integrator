@@ -21,7 +21,8 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//L03: TODO 2: Initialize Player parameters
-	position = fPoint(0, 300);
+	position = fPoint(0, 0);
+    visible = false;
     initialPosition = position;
 	return true;
 }
@@ -35,15 +36,15 @@ bool Player::Update(float dt)
 {
     Scene* scene = app->scene;
 
-    if (app->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+    if (app->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
     {
         angle += 5;
-        scene->angle += 5;
+        scene->angle -= 5;
     }
-    if (app->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
+    if (app->input->GetKey(SDL_SCANCODE_N) == KEY_REPEAT)
     {
 		angle -= 5;
-        scene->angle -= 5;
+        scene->angle += 5;
 	}
     if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
     {
@@ -58,19 +59,22 @@ bool Player::Update(float dt)
 
     if (app->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
     {
-        position = fPoint(0, 300);
         scene->hit = false;
     }
 
     if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
     {
-        initialPosition = position;
         float radians = angle * M_PI / 180.0f;
+        float posX = 30 + cos(radians) * 70;
+        float posY = 315 - sin(radians) * 80;
+        position = fPoint(posX, posY);
+        initialPosition = position;
         initialVelocity = { speedX * cosf(radians), -speedY * sinf(radians) };
         gravity = -0.00098f;
         totalTime = 0.0f;
         numBounces = 0;
         hasJumped = true;
+        visible = true;
     }
 
     float t = totalTime + dt;
@@ -95,13 +99,13 @@ bool Player::Update(float dt)
         }
     }
 
-    SDL_Rect enemyRect = { 600, 315, 50, 50 }; // Example enemy position and size
+    SDL_Rect enemyRect = { 600, 315, 50, 50 };
     if (CheckCollision(enemyRect))
     {
         scene->hit = true;
     }
 
-    app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
+    if (visible) app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
 
     totalTime += dt;
 

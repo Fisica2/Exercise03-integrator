@@ -89,7 +89,7 @@ bool Scene::Update(float dt)
 	if (!hit)app->render->DrawTexture(enemy, 600, 275);
 	else app->render->DrawTexture(enemyDead, 530, 275);
 
-	app->render->DrawTexture(cannon, 0, 300, NULL, 0.0f, angle, 0,0);
+	app->render->DrawTexture(cannon, 0, 300, NULL, 1.0f, angle, 30,30);
 
 	return true;
 }
