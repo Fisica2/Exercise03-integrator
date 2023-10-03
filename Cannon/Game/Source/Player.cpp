@@ -105,6 +105,24 @@ bool Player::Update(float dt)
         scene->hit = true;
     }
 
+    float tStep = 0.02f;
+    fPoint previewPosition = position;
+
+    for (float t = 0.0f; t <= totalTime; t += tStep)
+    {
+        float t1 = t + tStep;
+        float x1 = initialPosition.x + initialVelocity.x * t1;
+        float y1 = initialPosition.y + initialVelocity.y * t1 - 0.5f * gravity * t1 * t1;
+
+        app->render->DrawLine(static_cast<int>(previewPosition.x),
+            static_cast<int>(previewPosition.y),
+            static_cast<int>(x1),
+            static_cast<int>(y1),
+            255, 0, 0);
+
+        previewPosition = { x1, y1 };
+    }
+
     if (visible) app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
 
     totalTime += dt;
