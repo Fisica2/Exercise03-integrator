@@ -68,23 +68,24 @@ bool Scene::Update(float dt)
 	//L02 DONE 3: Make the camera movement independent of framerate
 	float camSpeed = 1; 
 
-	if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		app->render->camera.y -= (int)ceil(camSpeed * dt);
+	//if(app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	//	app->render->camera.y -= (int)ceil(camSpeed * dt);
 
-	if(app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		app->render->camera.y += (int)ceil(camSpeed * dt);
+	//if(app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	//	app->render->camera.y += (int)ceil(camSpeed * dt);
 
-	if(app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		app->render->camera.x -= (int)ceil(camSpeed * dt);
+	//if(app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	//	app->render->camera.x -= (int)ceil(camSpeed * dt);
 
-	if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		app->render->camera.x += (int)ceil(camSpeed * dt);
+	//if(app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	//	app->render->camera.x += (int)ceil(camSpeed * dt);
 
 	// Renders the image in the center of the screen 
-	app->render->DrawTexture(platform, -120, 330);
-	app->render->DrawTexture(platform, 380, 400);
-	app->render->DrawTexture(platform, 680, 400);
-	app->render->DrawTexture(platform, 980, 400);
+	app->render->DrawTexture(platform, -140, 330);
+	app->render->DrawTexture(platform, 270, 400);
+	app->render->DrawTexture(platform, 570, 400);
+	app->render->DrawTexture(platform, 870, 400);
+	app->render->DrawTexture(platform, 1170, 400);
 
 	if (!hit)app->render->DrawTexture(enemy, 600, 275);
 	else app->render->DrawTexture(enemyDead, 530, 275);

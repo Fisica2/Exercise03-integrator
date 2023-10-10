@@ -36,22 +36,22 @@ bool Player::Update(float dt)
 {
     Scene* scene = app->scene;
 
-    if (app->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
+    if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT && angle < 70)
     {
         angle += 5;
         scene->angle -= 5;
     }
-    if (app->input->GetKey(SDL_SCANCODE_N) == KEY_REPEAT)
+    if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT && angle > 20)
     {
 		angle -= 5;
         scene->angle += 5;
 	}
-    if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+    if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN && speedX > 0.4f)
     {
         speedX -= 0.1f;
         speedY -= 0.1f;
     }
-    if (app->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+    if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
     {
         speedX += 0.1f;
         speedY += 0.1f;
@@ -81,7 +81,7 @@ bool Player::Update(float dt)
     x = initialPosition.x + initialVelocity.x * t;
     y = initialPosition.y + initialVelocity.y * t - 0.5f * gravity * t * t;
 
-    if (y < 375 && hasJumped)
+    if (y <= platformRect.y - 20 && hasJumped)
     {
         position = { x, y };
         rotation += 3.0f;
@@ -97,44 +97,61 @@ bool Player::Update(float dt)
             totalTime = 0.0f;
             numBounces++;
         }
+        else
+        {
+            hasJumped = false;
+            visible = false;
+        }
     }
 
-    SDL_Rect enemyRect = { 600, 315, 50, 50 };
+
     if (CheckCollision(enemyRect))
     {
         scene->hit = true;
     }
 
-    float tStep = 0.02f;
-    fPoint previewPosition = position;
+    circleX = (int)position.x + 15;
+    circleY = (int)position.y + 15;
 
-    for (float t = 0.0f; t <= totalTime; t += tStep)
+    if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) debug = !debug;
+
+    if (visible)
     {
-        float t1 = t + tStep;
-        float x1 = initialPosition.x + initialVelocity.x * t1;
-        float y1 = initialPosition.y + initialVelocity.y * t1 - 0.5f * gravity * t1 * t1;
+        if (debug)
+        {
+            for (float t = 0.0f; t <= totalTime; t += 1.0f)
+            {
+                float x1 = initialPosition.x + 15 + initialVelocity.x * t;
+                float y1 = initialPosition.y + 15 + initialVelocity.y * t - 0.5f * gravity * t * t;
 
-        app->render->DrawLine(static_cast<int>(previewPosition.x),
-            static_cast<int>(previewPosition.y),
-            static_cast<int>(x1),
-            static_cast<int>(y1),
-            255, 0, 0);
+                app->render->DrawCircle(static_cast<int>(x1), static_cast<int>(y1), 1, 255, 0, 0);
+            }
 
-        previewPosition = { x1, y1 };
+            app->render->DrawCircle(static_cast<int>(circleX), static_cast<int>(circleY), static_cast<int>(circleRadius), 255, 0, 0);
+
+            SDL_RenderDrawRect(app->render->renderer, &enemyRect);
+            SDL_RenderDrawRect(app->render->renderer, &platformRect);
+		}
+        
+        app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
     }
-
-    if (visible) app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
 
     totalTime += dt;
 
-    printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %0.f", speedX, speedY, position.x, position.y, angle);
+    printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %.0f", speedX, speedY, position.x, position.y, angle);
     return true;
 }
 
 bool Player::CheckCollision(SDL_Rect enemyRect)
 {
-    SDL_Rect playerRect = { (int)position.x, (int)position.y, 30, 30 };
-    return SDL_HasIntersection(&playerRect, &enemyRect);
+
+    int closestX = std::max(enemyRect.x, std::min(circleX, enemyRect.x + enemyRect.w));
+    int closestY = std::max(enemyRect.y, std::min(circleY, enemyRect.y + enemyRect.h));
+
+    int distanceSquared = (circleX - closestX) * (circleX - closestX) + (circleY - closestY) * (circleY - closestY);
+
+    int circleRadiusSquared = 15 * 15;
+    return distanceSquared <= circleRadiusSquared;
 }
 
 

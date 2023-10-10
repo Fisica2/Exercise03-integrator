@@ -23,12 +23,12 @@ public:
 
 	bool CleanUp();
 
-	bool CheckCollision(SDL_Rect enemyRect);
+	bool CheckCollision(SDL_Rect Rect);
 
 public:
 
 	//L02: TODO 2: Declare player parameters
-	float speed = 0.2f;
+	/*float speed = 0.2f;*/
 	SDL_Texture* texture = NULL;
 
 public:
@@ -45,8 +45,18 @@ public:
 	float angle = 45.0f;
 	float speedX = 0.6f;
 	float speedY = 0.9f;
-
+	int circleRadius = 15;
+	int numSegments = 36;
 	bool visible = false;
+
+	int circleX = 0;
+	int circleY = 0;
+
+	SDL_Rect enemyRect = { 610, 315, 50, 85 };
+	SDL_Rect platformRect = { 380, 400, 1200, 25 };
+
+	bool isCollidingWithPlatform = false;
+	bool debug = false;
 };
 
 #endif // __PLAYER_H__
