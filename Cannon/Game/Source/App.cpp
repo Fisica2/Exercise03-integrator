@@ -136,6 +136,11 @@ bool App::Update()
 	if(ret == true)
 		ret = PostUpdate();
 
+	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) fpsCap = !fpsCap;
+
+	if (fpsCap) maxFrameDuration = 16;
+	else maxFrameDuration = 0;
+
 	FinishUpdate();
 	return ret;
 }

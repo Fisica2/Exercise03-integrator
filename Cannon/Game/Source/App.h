@@ -112,6 +112,7 @@ private:
 	//L02 DONE 1: Set the maximun frame duration in miliseconds.
 	uint32 maxFrameDuration = 16;
 
+	bool fpsCap = true;
 };
 
 extern App* app;

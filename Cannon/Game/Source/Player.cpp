@@ -36,12 +36,12 @@ bool Player::Update(float dt)
 {
     Scene* scene = app->scene;
 
-    if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT && angle < 70)
+    if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN && angle < 70)
     {
         angle += 5;
         scene->angle -= 5;
     }
-    if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT && angle > 20)
+    if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN && angle > 20)
     {
 		angle -= 5;
         scene->angle += 5;
@@ -84,7 +84,7 @@ bool Player::Update(float dt)
     if (y <= platformRect.y - 20 && hasJumped)
     {
         position = { x, y };
-        rotation += 3.0f;
+        rotation += 1.0f * dt;
     }
     else
     {
