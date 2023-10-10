@@ -53,7 +53,7 @@ public:
 	int circleY = 0;
 
 	SDL_Rect enemyRect = { 610, 315, 50, 85 };
-	SDL_Rect platformRect = { 380, 400, 1200, 25 };
+	SDL_Rect platformRect = { 270, 400, 1200, 25 };
 
 	bool isCollidingWithPlatform = false;
 	bool debug = false;
