@@ -57,6 +57,9 @@ public:
 
 	bool isCollidingWithPlatform = false;
 	bool debug = false;
+
+	bool col = false;
+	int hasBounced = false;
 };
 
 #endif // __PLAYER_H__

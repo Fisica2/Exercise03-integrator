@@ -11,7 +11,7 @@
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
-	name.Create("Player");
+    name.Create("Player");
 }
 
 Player::~Player() {
@@ -20,16 +20,16 @@ Player::~Player() {
 
 bool Player::Awake() {
 
-	//L03: TODO 2: Initialize Player parameters
-	position = fPoint(0, 0);
+    //L03: TODO 2: Initialize Player parameters
+    position = fPoint(0, 0);
     visible = false;
     initialPosition = position;
-	return true;
+    return true;
 }
 
 bool Player::Start() {
-	texture = app->tex->Load("Assets/Textures/ball.png");
-	return true;
+    texture = app->tex->Load("Assets/Textures/ball.png");
+    return true;
 }
 
 bool Player::Update(float dt)
@@ -43,9 +43,9 @@ bool Player::Update(float dt)
     }
     if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN && angle > 20)
     {
-		angle -= 5;
+        angle -= 5;
         scene->angle += 5;
-	}
+    }
     if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN && speedX > 0.4f)
     {
         speedX -= 0.1f;
@@ -81,29 +81,34 @@ bool Player::Update(float dt)
     x = initialPosition.x + initialVelocity.x * t;
     y = initialPosition.y + initialVelocity.y * t - 0.5f * gravity * t * t;
 
-    if (y <= platformRect.y - 20 && hasJumped)
+    if (CheckCollision(platformRect) && !hasBounced) {
+        col = true;
+    }
+    else {
+        col = false;
+    }
+
+    if (!col && hasJumped && numBounces < 12)
     {
         position = { x, y };
         rotation += 1.0f * dt;
+        hasBounced = false;
     }
-    else
+    else if(col)
     {
-        rotation += 0.0f;
-        if (numBounces < 8)
-        {
-            initialPosition = position;
-            initialVelocity.y = -initialVelocity.y * 0.85f;
-            initialVelocity.x = -initialVelocity.x * 0.95f;
-            totalTime = 0.0f;
-            numBounces++;
-        }
-        else
-        {
-            hasJumped = false;
-            visible = false;
-        }
+        hasBounced = true;
+        rotation = 0.0f;
+        float radians = angle * M_PI / 180.0f;
+        float posX = position.x + cos(radians);
+        float posY = position.y - sin(radians);
+        position = fPoint(posX, posY);
+        initialPosition = position;
+        initialVelocity.y = initialVelocity.y * 0.75f;
+        initialVelocity.x = initialVelocity.x * 0.90f;
+        gravity = -0.00098f;
+        totalTime = 0.0f;
+        numBounces++;
     }
-
 
     if (CheckCollision(enemyRect))
     {
@@ -131,8 +136,8 @@ bool Player::Update(float dt)
 
             SDL_RenderDrawRect(app->render->renderer, &enemyRect);
             SDL_RenderDrawRect(app->render->renderer, &platformRect);
-		}
-        
+        }
+
         app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
     }
 
@@ -158,5 +163,5 @@ bool Player::CheckCollision(SDL_Rect enemyRect)
 bool Player::CleanUp()
 {
 
-	return true;
+    return true;
 }
