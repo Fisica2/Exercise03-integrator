@@ -147,15 +147,15 @@ bool Player::Update(float dt)
     return true;
 }
 
-bool Player::CheckCollision(SDL_Rect enemyRect)
+bool Player::CheckCollision(SDL_Rect rect)
 {
 
-    int closestX = std::max(enemyRect.x, std::min(circleX, enemyRect.x + enemyRect.w));
-    int closestY = std::max(enemyRect.y, std::min(circleY, enemyRect.y + enemyRect.h));
+    int closestX = std::max(rect.x, std::min(circleX, rect.x + rect.w));
+    int closestY = std::max(rect.y, std::min(circleY, rect.y + rect.h));
 
-    int distanceSquared = (circleX - closestX) * (circleX - closestX) + (circleY - closestY) * (circleY - closestY);
+    int distanceSquared = pow((circleX - closestX),2) + pow((circleY - closestY),2);
 
-    int circleRadiusSquared = 15 * 15;
+    int circleRadiusSquared = pow(circleRadius, 2);
     return distanceSquared <= circleRadiusSquared;
 }
 
