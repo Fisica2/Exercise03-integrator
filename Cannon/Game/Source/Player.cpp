@@ -84,8 +84,12 @@ bool Player::Update(float dt)
     if (CheckCollision(platformRect) && !hasBounced) {
         col = true;
     }
+    else if (CheckCollision(platformRect2) && !hasBounced) {
+        col = true;
+    }
     else {
         col = false;
+        colFace = 0;
     }
 
     if (!col && hasJumped && numBounces < 12)
@@ -94,7 +98,7 @@ bool Player::Update(float dt)
         rotation += 1.0f * dt;
         hasBounced = false;
     }
-    else if(col)
+    else if (col)
     {
         hasBounced = true;
         rotation = 0.0f;
@@ -103,12 +107,32 @@ bool Player::Update(float dt)
         float posY = position.y - sin(radians);
         position = fPoint(posX, posY);
         initialPosition = position;
-        initialVelocity.y = initialVelocity.y * 0.75f;
-        initialVelocity.x = initialVelocity.x * 0.90f;
+        if (colFace == 1)
+        {
+            initialVelocity.y = initialVelocity.y * 0.75f;
+            initialVelocity.x = -initialVelocity.x * 0.90f;
+        }
+        else if (colFace == 2)
+        {
+            initialVelocity.y = initialVelocity.y * 0.75f;
+            initialVelocity.x = -initialVelocity.x * 0.90f;
+        }
+        else if (colFace == 3)
+		{
+			initialVelocity.y = -initialVelocity.y * 0.90f;
+			initialVelocity.x = initialVelocity.x * 0.75f;
+		}
+		else if (colFace == 4)
+		{
+			initialVelocity.y = -initialVelocity.y * 0.90f;
+			initialVelocity.x = initialVelocity.x * 0.75f;
+		}
+
         gravity = -0.00098f;
         totalTime = 0.0f;
         numBounces++;
     }
+    
 
     if (CheckCollision(enemyRect))
     {
@@ -136,6 +160,7 @@ bool Player::Update(float dt)
 
             SDL_RenderDrawRect(app->render->renderer, &enemyRect);
             SDL_RenderDrawRect(app->render->renderer, &platformRect);
+            SDL_RenderDrawRect(app->render->renderer, &platformRect2);
         }
 
         app->render->DrawTexture(texture, position.x, position.y, NULL, 1.0f, rotation);
@@ -143,22 +168,59 @@ bool Player::Update(float dt)
 
     totalTime += dt;
 
-    printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %.0f", speedX, speedY, position.x, position.y, angle);
+   /* printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %.0f", speedX, speedY, position.x, position.y, angle);*/
     return true;
 }
 
 bool Player::CheckCollision(SDL_Rect rect)
 {
-
     int closestX = std::max(rect.x, std::min(circleX, rect.x + rect.w));
     int closestY = std::max(rect.y, std::min(circleY, rect.y + rect.h));
 
-    int distanceSquared = pow((circleX - closestX),2) + pow((circleY - closestY),2);
+    int distanceX = circleX - closestX;
+    int distanceY = circleY - closestY;
 
     int circleRadiusSquared = pow(circleRadius, 2);
-    return distanceSquared <= circleRadiusSquared;
-}
 
+    if ((distanceX * distanceX + distanceY * distanceY) <= circleRadiusSquared)
+    {
+
+        int overlapX = circleRadius - abs(distanceX);
+        int overlapY = circleRadius - abs(distanceY);
+
+        if (overlapX < overlapY)
+        {
+            if (distanceX < 0)
+            {
+                printf("Collision on the left\n");
+                colFace = 1;
+            }
+            else
+            {
+                printf("Collision on the right\n");
+                colFace = 2;
+            }
+        }
+        else
+        {
+            if (distanceY < 0)
+            {
+                printf("Collision on the top\n");
+                colFace = 3;
+			}
+			else
+			{
+				printf("Collision on the bottom\n");
+                colFace = 4;
+            }
+        }
+
+        return true;
+    }
+
+    colFace = 0;
+    return false;
+}
 
 bool Player::CleanUp()
 {

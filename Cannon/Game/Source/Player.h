@@ -54,10 +54,12 @@ public:
 
 	SDL_Rect enemyRect = { 610, 315, 50, 85 };
 	SDL_Rect platformRect = { 270, 400, 1200, 25 };
+	SDL_Rect platformRect2 = { 400, 50, 400, 200 };
 
 	bool isCollidingWithPlatform = false;
 	bool debug = false;
 
+	int colFace = 0; // 0 = no collision, 1 = top, 2 = bottom, 3 = left, 4 = right
 	bool col = false;
 	int hasBounced = false;
 };
