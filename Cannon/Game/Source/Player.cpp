@@ -81,16 +81,25 @@ bool Player::Update(float dt)
     x = initialPosition.x + initialVelocity.x * t;
     y = initialPosition.y + initialVelocity.y * t - 0.5f * gravity * t * t;
 
+    vy = initialVelocity.y - gravity * totalTime;
+
     if (CheckCollision(platformRect) && !hasBounced) {
         col = true;
+        printf("Collision with platform\n");
+        colFace = GetCollisionSide(platformRect);
     }
     else if (CheckCollision(platformRect2) && !hasBounced) {
         col = true;
+        printf("Collision with platform2\n");
+        colFace = GetCollisionSide(platformRect2);
     }
-    else {
+    else
+    {
         col = false;
-        colFace = 0;
+        hasEntered = false;
     }
+
+
 
     if (!col && hasJumped && numBounces < 12)
     {
@@ -107,22 +116,25 @@ bool Player::Update(float dt)
         float posY = position.y - sin(radians);
         position = fPoint(posX, posY);
         initialPosition = position;
-        if (colFace == 1)
+
+        if (colFace == 1) // left
         {
-            initialVelocity.y = initialVelocity.y * 0.75f;
+            if (vy > 0) initialVelocity.y = -initialVelocity.y * 0.75f;
+            else initialVelocity.y = initialVelocity.y * 0.75f;
             initialVelocity.x = -initialVelocity.x * 0.90f;
         }
-        else if (colFace == 2)
+        else if (colFace == 2) //right
         {
-            initialVelocity.y = initialVelocity.y * 0.75f;
+            if (vy > 0) initialVelocity.y = -initialVelocity.y * 0.75f;
+            else initialVelocity.y = initialVelocity.y * 0.75f;
             initialVelocity.x = -initialVelocity.x * 0.90f;
         }
-        else if (colFace == 3)
+        else if (colFace == 3) //top
 		{
-			initialVelocity.y = -initialVelocity.y * 0.90f;
+			initialVelocity.y = initialVelocity.y * 0.90f;
 			initialVelocity.x = initialVelocity.x * 0.75f;
 		}
-		else if (colFace == 4)
+		else if (colFace == 4) //bottom
 		{
 			initialVelocity.y = -initialVelocity.y * 0.90f;
 			initialVelocity.x = initialVelocity.x * 0.75f;
@@ -182,44 +194,58 @@ bool Player::CheckCollision(SDL_Rect rect)
 
     int circleRadiusSquared = pow(circleRadius, 2);
 
+    if ((distanceX * distanceX + distanceY * distanceY) <= circleRadiusSquared) return true;
+    else return false;
+}
+
+int Player::GetCollisionSide(SDL_Rect rect)
+{
+    int closestX = std::max(rect.x, std::min(circleX, rect.x + rect.w));
+    int closestY = std::max(rect.y, std::min(circleY, rect.y + rect.h));
+
+    int distanceX = circleX - closestX;
+    int distanceY = circleY - closestY;
+
+    int circleRadiusSquared = pow(circleRadius, 2);
+
+
     if ((distanceX * distanceX + distanceY * distanceY) <= circleRadiusSquared)
     {
-
-        int overlapX = circleRadius - abs(distanceX);
-        int overlapY = circleRadius - abs(distanceY);
-
-        if (overlapX < overlapY)
+        if (!hasEntered)
         {
-            if (distanceX < 0)
+            int overlapX = circleRadius - abs(distanceX);
+            int overlapY = circleRadius - abs(distanceY);
+
+            if (overlapX < overlapY)
             {
-                printf("Collision on the left\n");
-                colFace = 1;
+                if (distanceX < 0)
+                {
+                    printf("Collision on the left\n");
+                    colFace = 1;
+                }
+                else
+                {
+                    printf("Collision on the right\n");
+                    colFace = 2;
+                }
             }
             else
             {
-                printf("Collision on the right\n");
-                colFace = 2;
+                if (distanceY < 0)
+                {
+                    printf("Collision on the top\n");
+                    colFace = 3;
+                }
+                else
+                {
+                    printf("Collision on the bottom\n");
+                    colFace = 4;
+                }
             }
         }
-        else
-        {
-            if (distanceY < 0)
-            {
-                printf("Collision on the top\n");
-                colFace = 3;
-			}
-			else
-			{
-				printf("Collision on the bottom\n");
-                colFace = 4;
-            }
-        }
-
-        return true;
     }
-
-    colFace = 0;
-    return false;
+    hasEntered = true;
+    return colFace;
 }
 
 bool Player::CleanUp()

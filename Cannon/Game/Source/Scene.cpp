@@ -87,6 +87,8 @@ bool Scene::Update(float dt)
 	app->render->DrawTexture(platform, 870, 400);
 	app->render->DrawTexture(platform, 1170, 400);
 
+	app->render->DrawTexture(platform, 500, 100);
+
 	if (!hit)app->render->DrawTexture(enemy, 600, 275);
 	else app->render->DrawTexture(enemyDead, 530, 275);
 
