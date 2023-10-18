@@ -84,32 +84,28 @@ bool Player::Update(float dt)
     vy = initialVelocity.y - gravity * totalTime;
 
     if (CheckCollision(platformRect) && !hasBounced) {
+        colFace = GetCollisionSide(platformRect);
         col = true;
         printf("Collision with platform\n");
-        colFace = GetCollisionSide(platformRect);
     }
     else if (CheckCollision(platformRect2) && !hasBounced) {
-        col = true;
-        printf("Collision with platform2\n");
         colFace = GetCollisionSide(platformRect2);
+        col = true;
+        printf("Collision with platform 2\n");
     }
     else
     {
         col = false;
-        hasEntered = false;
+        hasBounced = false;
     }
-
-
 
     if (!col && hasJumped && numBounces < 12)
     {
         position = { x, y };
         rotation += 1.0f * dt;
-        hasBounced = false;
     }
     else if (col)
     {
-        hasBounced = true;
         rotation = 0.0f;
         float radians = angle * M_PI / 180.0f;
         float posX = position.x + cos(radians);
@@ -143,6 +139,7 @@ bool Player::Update(float dt)
         gravity = -0.00098f;
         totalTime = 0.0f;
         numBounces++;
+        hasBounced = true;
     }
     
 
@@ -186,65 +183,68 @@ bool Player::Update(float dt)
 
 bool Player::CheckCollision(SDL_Rect rect)
 {
-    int closestX = std::max(rect.x, std::min(circleX, rect.x + rect.w));
-    int closestY = std::max(rect.y, std::min(circleY, rect.y + rect.h));
+    float closestX = std::max(rect.x, std::min(circleX, rect.x + rect.w));
+    float closestY = std::max(rect.y, std::min(circleY, rect.y + rect.h));
 
-    int distanceX = circleX - closestX;
-    int distanceY = circleY - closestY;
+    float distanceX = circleX - closestX;
+    float distanceY = circleY - closestY;
 
-    int circleRadiusSquared = pow(circleRadius, 2);
+    float circleRadiusSquared = pow(circleRadius, 2);
 
-    if ((distanceX * distanceX + distanceY * distanceY) <= circleRadiusSquared) return true;
-    else return false;
+    if ((distanceX * distanceX + distanceY * distanceY) <= circleRadiusSquared)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 int Player::GetCollisionSide(SDL_Rect rect)
 {
-    int closestX = std::max(rect.x, std::min(circleX, rect.x + rect.w));
-    int closestY = std::max(rect.y, std::min(circleY, rect.y + rect.h));
+    float closestX = std::max(rect.x, std::min(circleX, rect.x + rect.w));
+    float closestY = std::max(rect.y, std::min(circleY, rect.y + rect.h));
 
-    int distanceX = circleX - closestX;
-    int distanceY = circleY - closestY;
+    float distanceX = circleX - closestX;
+    float distanceY = circleY - closestY;
 
-    int circleRadiusSquared = pow(circleRadius, 2);
+    float circleRadiusSquared = pow(circleRadius, 2);
 
 
     if ((distanceX * distanceX + distanceY * distanceY) <= circleRadiusSquared)
     {
-        if (!hasEntered)
-        {
-            int overlapX = circleRadius - abs(distanceX);
-            int overlapY = circleRadius - abs(distanceY);
 
-            if (overlapX < overlapY)
+        float overlapX = circleRadius - abs(distanceX);
+        float overlapY = circleRadius - abs(distanceY);
+
+        if (overlapX < overlapY)
+        {
+            if (distanceX < 0)
             {
-                if (distanceX < 0)
-                {
-                    printf("Collision on the left\n");
-                    colFace = 1;
-                }
-                else
-                {
-                    printf("Collision on the right\n");
-                    colFace = 2;
-                }
+                printf("Collision on the left\n");
+                colFace = 1;
             }
             else
             {
-                if (distanceY < 0)
-                {
-                    printf("Collision on the top\n");
-                    colFace = 3;
-                }
-                else
-                {
-                    printf("Collision on the bottom\n");
-                    colFace = 4;
-                }
+                printf("Collision on the right\n");
+                colFace = 2;
+            }
+        }
+        else
+        {
+            if (distanceY < 0)
+            {
+                printf("Collision on the top\n");
+                colFace = 3;
+            }
+            else
+            {
+                printf("Collision on the bottom\n");
+                colFace = 4;
             }
         }
     }
-    hasEntered = true;
     return colFace;
 }
 
