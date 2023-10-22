@@ -53,9 +53,9 @@ public:
 	int circleX = 0;
 	int circleY = 0;
 
-	SDL_Rect enemyRect = { 610, 315, 50, 85 };
-	SDL_Rect platformRect = { 270, 400, 1200, 25 };
-	SDL_Rect platformRect2 = { 500, 100, 300, 25 };
+	SDL_Rect enemyRect = { 610, 315 + 100, 50, 85 };
+	SDL_Rect platformRect = { 260, 400 + 100, 1200, 25 };
+	SDL_Rect platformRect2 = { 460, 70 + 100, 300, 25 };
 
 	bool isCollidingWithPlatform = false;
 	bool debug = false;

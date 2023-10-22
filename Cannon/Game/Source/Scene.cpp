@@ -81,18 +81,18 @@ bool Scene::Update(float dt)
 	//	app->render->camera.x += (int)ceil(camSpeed * dt);
 
 	// Renders the image in the center of the screen 
-	app->render->DrawTexture(platform, -140, 330);
-	app->render->DrawTexture(platform, 270, 400);
-	app->render->DrawTexture(platform, 570, 400);
-	app->render->DrawTexture(platform, 870, 400);
-	app->render->DrawTexture(platform, 1170, 400);
+	app->render->DrawTexture(platform, -140, 330 + 100);
+	app->render->DrawTexture(platform, 260, 400 + 100);
+	app->render->DrawTexture(platform, 560, 400 + 100);
+	app->render->DrawTexture(platform, 860, 400 + 100);
+	app->render->DrawTexture(platform, 1160, 400 + 100);
 
-	app->render->DrawTexture(platform, 500, 100);
+	app->render->DrawTexture(platform, 460, 70 + 100);
 
-	if (!hit)app->render->DrawTexture(enemy, 600, 275);
-	else app->render->DrawTexture(enemyDead, 530, 275);
+	if (!hit)app->render->DrawTexture(enemy, 600, 275 + 100);
+	else app->render->DrawTexture(enemyDead, 530, 275 + 100);
 
-	app->render->DrawTexture(cannon, 0, 300, NULL, 1.0f, angle, 30,30);
+	app->render->DrawTexture(cannon, 0, 300 + 100, NULL, 1.0f, angle, 30,30);
 
 	return true;
 }

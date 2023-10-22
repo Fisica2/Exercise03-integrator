@@ -51,7 +51,7 @@ bool Player::Update(float dt)
         speedX -= 0.1f;
         speedY -= 0.1f;
     }
-    if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+    if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN && speedX < 0.9f)
     {
         speedX += 0.1f;
         speedY += 0.1f;
@@ -66,7 +66,7 @@ bool Player::Update(float dt)
     {
         float radians = angle * M_PI / 180.0f;
         float posX = 30 + cos(radians) * 70;
-        float posY = 315 - sin(radians) * 80;
+        float posY = 315 + 100 - sin(radians) * 80;
         position = fPoint(posX, posY);
         initialPosition = position;
         initialVelocity = { speedX * cosf(radians), -speedY * sinf(radians) };
@@ -86,12 +86,10 @@ bool Player::Update(float dt)
     if (CheckCollision(platformRect) && !hasBounced) {
         colFace = GetCollisionSide(platformRect);
         col = true;
-        printf("Collision with platform\n");
     }
     else if (CheckCollision(platformRect2) && !hasBounced) {
         colFace = GetCollisionSide(platformRect2);
         col = true;
-        printf("Collision with platform 2\n");
     }
     else
     {
@@ -177,7 +175,7 @@ bool Player::Update(float dt)
 
     totalTime += dt;
 
-   /* printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %.0f", speedX, speedY, position.x, position.y, angle);*/
+    printf("\r speedX: %.2f, speedY: %.2f, x: %.2f, y: %.2f, angle: %.0f", speedX, speedY, position.x, position.y, angle);
     return true;
 }
 
@@ -220,29 +218,13 @@ int Player::GetCollisionSide(SDL_Rect rect)
 
         if (overlapX < overlapY)
         {
-            if (distanceX < 0)
-            {
-                printf("Collision on the left\n");
-                colFace = 1;
-            }
-            else
-            {
-                printf("Collision on the right\n");
-                colFace = 2;
-            }
+            if (distanceX < 0) colFace = 1;
+            else colFace = 2;
         }
         else
         {
-            if (distanceY < 0)
-            {
-                printf("Collision on the top\n");
-                colFace = 3;
-            }
-            else
-            {
-                printf("Collision on the bottom\n");
-                colFace = 4;
-            }
+            if (distanceY < 0) colFace = 3;
+            else colFace = 4;
         }
     }
     return colFace;
